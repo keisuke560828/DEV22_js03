@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+
+     <!-- コンテンツ表示画面 -->
+     <div>
+        <div>
+            名前：<input type="text" id="uname">
+        </div>
+            <div>
+                <textarea id="text" cols="30" rows="10"></textarea>
+            </div>
+            <div>    
+                <button id="send">送信</button>
+                <button id="delete">削除</button>
+            </div>
+        <div id="output" style="overflow: auto;height: 300px;"></div>
+    </div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- <script>
+        const text = {
+            name:"オオクボ"
+        }
+        console.log(test);
+     -->
+// 演習１
+    // const 自分の名前 = {} → const morita = {}
+    // name: 'xxxx',
+    // syumi: 'xxxxx',
+    // sukinamono: 'xxxxx',
+    // console.log()で表示しましょう🤗
+        // クローゼット(オブジェクト)を作る
+    // 以下、ファイヤーベース
+
+<script type="module">
+  // Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved } 
+from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyA1n1u2HuPXRmYcYyTnJswkcqvuVGoFlog",
+    authDomain: "keisuke0828-6bc30.firebaseapp.com",
+    projectId: "keisuke0828-6bc30",
+    storageBucket: "keisuke0828-6bc30.appspot.com",
+    messagingSenderId: "924728434304",
+    appId: "1:924728434304:web:86b2e88a41aa3774801065"
+  };
+
+  // Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+const db  = getDatabase(app); //RealtimeDBに接続
+const dbRef = ref(db,"chat"); //RealtimeDB内の"chat"を使う・参照
+
+// 送信処理
+// $('#send').on('click', function(){
+//     //  alert(1)//動いたらalertはコメントアウトしておきましょう！
+//       // 送信の処理を記述していきます🤗
+      
+//       const text = $('#text').val();
+//       const uname = $('#uname').val();
+      
+//       const msg = {
+//           uname = $("#uname").val(),
+//           text = $("#text").val()
+//     //   alert(uname+text);
+//     //   取得確認
+//     }
+//     const newPostRef = push(dbRef);
+//     set(newPostRef, msg);
+
+//     });
+
+
+// 送信処理
+$('#send').on('click', function(){
+      // alert(1)//動いたらalertはコメントアウトしておきましょう！
+      // 送信の処理を記述していきます🤗
+
+      // id='uname' つまり #uname 名前のところ
+      // id='text' つまり #text テキストエリアのところ
+      const text = $('#text').val();
+      const uname = $('#uname').val();
+
+      // データの塊を作成している
+      const msg = {
+       uname: $('#uname').val(),
+       text: $('#text').val(), 
+      }
+
+      //ユニークKEYを生成 = 絶対にかぶらない番号みたいなもの
+      const newPostRef = push(dbRef);
+      //"chat"にユニークKEYをつけてオブジェクトデータを登録
+      set(newPostRef, msg);
+      
+      // alert(uname + text);　入力のチェックをしました
+    });
+
+// 送信処理２
+$("#text").on("keydown",function(e){
+     console.log(e);
+    if(e.keyCode==13){
+        const text = $('#text').val();
+        const uname = $('#uname').val();
+
+      // データの塊を作成している
+        const msg = {
+        uname: $('#uname').val(),
+        text: $('#text').val(), 
+      }
+      //ユニークKEYを生成 = 絶対にかぶらない番号みたいなもの
+      const newPostRef = push(dbRef);
+      //"chat"にユニークKEYをつけてオブジェクトデータを登録
+      set(newPostRef, msg);
+      
+      // alert(uname + text);　入力のチェックをしました
+    }
+});
+
+
+
+
+//受信処理
+onChildAdded(dbRef, function (data) {
+        const msg = data.val();
+        const key = data.key; //これが固有の鍵
+
+        console.log(key, '鍵')
+        // テンプレートリテラル
+        let hh = `
+        <div class="message" data-key=${key}>
+          <input type="text" value=${msg.uname} class="uname"/>
+          <input type="text" value=${msg.text} class="text"/>
+          <p class="update">更新</p>
+          <p class="delete">削除</p>
+        </div>`;
+        //この一つの塊が「鍵」を表してる
+
+        $("#output").append(hh);
+      });
+
+$(document).on("click", ".delete", function(){
+        //クリックされた親の鍵を取得する
+        var v = $(this).parent().data().key;
+
+        console.log(v, 'vvv') //-MrWxLlpH8HdF7WXK_U9
+
+        //vは鍵
+        remove(ref(db, 'chat/' + v));
+
+        //htmlを消す方法
+        $(this).parent().remove();
+      });
+
+      // 更新
+      $(document).on("click", ".update", function(){
+        var v = $(this).parent().data().key;
+
+        var nameValue = $(this).siblings('.uname').val();
+        var textValue = $(this).siblings('.text').val();
+
+        console.log(nameValue, '同じ列')
+        console.log(textValue, '同じ列')
+        //クリックされた親の鍵を取得する
+
+        //更新処理
+        set(ref(db, 'chat/' + v), {
+          uname: nameValue,
+          text: textValue,
+        })
+      });
+
+
+
+// 削除処理
+$(document).on("click", ".delete", function(){
+        var v = $(this).parent().data().key;
+        console.log(v, 'vvv') //-MrWxLlpH8HdF7WXK_U9
+
+        //vは鍵
+
+      });
+
+
+
+
+// //受信処理（授業）
+// onChildAdded(dbRef, function (data) {
+//         const msg = data.val();
+//         const key = data.key;　//これが固有の鍵
+
+//         console.log(key, '鍵')
+
+//         // let h = "<p>";
+//         // h += msg.uname;
+//         // h += "<br>";
+//         // h += msg.text;
+//         // h += "</p>";
+
+//         // テンプレートリテラル
+//         let hh = `
+//         <div class="message" data-key=${key}>
+//           <p>${msg.uname}</p>
+//           <p>${msg.text}</p>
+//           <p class="delete">削除</p>
+//         </div>`;
+//         //この一つの塊が「鍵」を表してる
+
+//         $("#output").append(hh);
+//       });
+
+
+
+
+// $('#delete').on('click', function(){
+//       // alert(1)//動いたらalertはコメントアウトしておきましょう！
+//       // 送信の処理を記述していきます🤗
+
+//       // id='uname' つまり #uname 名前のところ
+//       // id='text' つまり #text テキストエリアのところ
+//       const text = $('#text').val();
+//       const uname = $('#uname').val();
+
+//       // データの塊を作成している
+//       const msg = {
+//        uname: $('#uname').val(),
+//        text: $('#text').val(), 
+//       }
+
+//       //ユニークKEYを生成 = 絶対にかぶらない番号みたいなもの
+//       const newPostRef = push(dbRef);
+//       //"chat"にユニークKEYをつけてオブジェクトデータを登録
+//       set(newPostRef, msg);
+      
+//       // alert(uname + text);　入力のチェックをしました
+//     });
+
+</script>
+
+</body>
+</html>
