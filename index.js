@@ -26,4 +26,5 @@ database.ref(room).on("child_added", function(data) {
     str += '<div class="text">日時：'+v.date+'</div>';
     str += '<div class="text">メッセージ：'+v.message+'</div><hr>';
     output.innerHTML += str;
+    
 });
