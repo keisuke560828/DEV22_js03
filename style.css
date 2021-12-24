@@ -1,18 +1,80 @@
 body {
-    background-color: gainsboro;
-}
-
-div {
-    text-align: center;
-}
-
-textarea {
-    vertical-align:top;
-    
+    background-color: #8db4e5;
 }
 
 #output {
-    background-color: skyblue;
-    height:300px;
-    overflow:auto;
+    background-color: #8db4e5;
+    height:80vh;
+    overflow:scroll ;
 }
+
+.container {
+    display: flex;
+    padding-top: 60px;
+   
+}
+
+textarea{
+    width: 500px;
+    resize: none;
+}
+
+#send{
+    width: 100%;
+    height: 85%;
+    background: #61E739;
+    color: #fff;
+}
+
+
+/* 森田先生のcss */
+.message {
+    width: 500px;
+    border-radius: 10px;
+    box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    }
+
+input {
+    border: 1px solid #000;
+    width: 40%;
+    padding: 10px;
+    box-sizing: border-box;
+    height: 40px;
+    }
+
+/* 更新 */
+.update {
+    margin-left: auto;
+    width: 50px;
+    height: 50px;  
+    line-height: 50px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+    transition: all .3s;
+    }
+
+.update:hover {
+    opacity: .6;
+    cursor: pointer;
+    }
+
+/* 削除 */
+.delete {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: #fff;
+    border-radius: 5px;
+    }
+
+.delete:hover {
+    opacity: .6;
+    cursor: pointer;
+    }

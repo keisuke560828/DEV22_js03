@@ -12,41 +12,32 @@
 
      <!-- コンテンツ表示画面 -->
      <div>
-        <div>
-            名前：<input type="text" id="uname">
-
-
-
-            
-
-        </div>
-            <div>
-                <textarea id="text" cols="30" rows="10"></textarea>
-            </div>
-            <div>    
+        <div id="box"></div>
+          <div id="output"></div>
+          <div class="container">
+              <div class="uname-area">
+                名前：<input type="text" id="uname">
+              </div>
+              <div class="text-area">
+                <textarea id="text"></textarea>
+              </div>
+              <div class="send-area">    
                 <button id="send">送信</button>
-                <button id="delete">削除</button>
-            </div>
-        <div id="output" style="overflow: auto;height: 300px;"></div>
+              </div>
+          </div>               
     </div>
-
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    <!-- <script>
-        const text = {
-            name:"オオクボ"
-        }
-        console.log(test);
-     -->
-// 演習１
+  
+<!-- // 演習１
     // const 自分の名前 = {} → const morita = {}
     // name: 'xxxx',
     // syumi: 'xxxxx',
     // sukinamono: 'xxxxx',
     // console.log()で表示しましょう🤗
         // クローゼット(オブジェクト)を作る
-    // 以下、ファイヤーベース
+    // 以下、ファイヤーベース -->
 
 <script type="module">
   // Import the functions you need from the SDKs you need
@@ -69,7 +60,6 @@ const firebaseConfig = {
 
   // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 const db  = getDatabase(app); //RealtimeDBに接続
 const dbRef = ref(db,"chat"); //RealtimeDB内の"chat"を使う・参照
 
@@ -89,8 +79,17 @@ const dbRef = ref(db,"chat"); //RealtimeDB内の"chat"を使う・参照
 //     }
 //     const newPostRef = push(dbRef);
 //     set(newPostRef, msg);
-
 //     });
+
+
+
+// 組み込み関数・JSのオブジェクトの１つ
+var day = new Date().toLocaleString();
+document.getElementById("box").innerHTML = day;
+// var today = new Date();
+// console.log(
+// today.getHours() + "時" + today.getMinutes() + "分" + ('0' +today.getSeconds()).slice(-2) + "秒"
+// );
 
 
 // 送信処理
@@ -113,7 +112,6 @@ $('#send').on('click', function(){
       const newPostRef = push(dbRef);
       //"chat"にユニークKEYをつけてオブジェクトデータを登録
       set(newPostRef, msg);
-      
       // alert(uname + text);　入力のチェックをしました
     });
 
@@ -133,12 +131,9 @@ $("#text").on("keydown",function(e){
       const newPostRef = push(dbRef);
       //"chat"にユニークKEYをつけてオブジェクトデータを登録
       set(newPostRef, msg);
-      
       // alert(uname + text);　入力のチェックをしました
     }
 });
-
-
 
 
 //受信処理
@@ -173,8 +168,8 @@ $(document).on("click", ".delete", function(){
         $(this).parent().remove();
       });
 
-      // 更新
-      $(document).on("click", ".update", function(){
+// 更新
+$(document).on("click", ".update", function(){
         var v = $(this).parent().data().key;
 
         var nameValue = $(this).siblings('.uname').val();
@@ -184,14 +179,12 @@ $(document).on("click", ".delete", function(){
         console.log(textValue, '同じ列')
         //クリックされた親の鍵を取得する
 
-        //更新処理
+//更新処理
         set(ref(db, 'chat/' + v), {
           uname: nameValue,
           text: textValue,
         })
       });
-
-
 
 // 削除処理
 $(document).on("click", ".delete", function(){
